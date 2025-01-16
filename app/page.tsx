@@ -7,6 +7,7 @@ import { Switch } from "@/components/ui/switch";
 
 import Image from "next/image";
 import { Thermometer, Users } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
 interface HangangData {
   success: boolean;
@@ -21,7 +22,7 @@ export default function Home() {
   const [currentTime, setCurrentTime] = useState(new Date());
   const [waterTemp, setWaterTemp] = useState<HangangData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [jumpCount, setJumpCount] = useState(100);
+  const [jumpCount, setJumpCount] = useState(0);
   const [containerHeight, setContainerHeight] = useState(96);
   const textRef = useRef<HTMLSpanElement>(null);
   const [isClicked, setIsClicked] = useState(false);
@@ -107,10 +108,61 @@ export default function Home() {
     return () => window.removeEventListener("resize", calculateHeight);
   }, [jumpCount]);
 
-  const handleClick = () => {
-    setJumpCount((prev) => prev + 1);
-    setIsClicked(true);
+  // 오늘 날짜의 시작과 끝 시간 구하기
+  const getTodayRange = () => {
+    const now = new Date();
+    const start = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const end = new Date(start);
+    end.setDate(end.getDate() + 1);
+
+    return {
+      start: start.toISOString(),
+      end: end.toISOString(),
+    };
   };
+
+  // 오늘의 점프 수 가져오기
+  const fetchTodayJumpCount = async () => {
+    const { start, end } = getTodayRange();
+
+    const { count, error } = await supabase
+      .from("jump")
+      .select("*", { count: "exact" })
+      .gte("created_at", start)
+      .lt("created_at", end);
+
+    if (error) {
+      console.error("점프 수를 가져오는데 실패했습니다:", error);
+      return;
+    }
+
+    setJumpCount(count || 0);
+  };
+
+  // 새로운 점프 추가
+  const handleClick = async () => {
+    try {
+      const { error } = await supabase
+        .from("jump")
+        .insert([{ created_at: new Date().toISOString() }]);
+
+      if (error) throw error;
+
+      setJumpCount((prev) => prev + 1);
+      setIsClicked(true);
+    } catch (error) {
+      console.error("점프를 추가하는데 실패했습니다:", error);
+    }
+  };
+
+  // 컴포넌트 마운트시 초기 데이터 로드
+  useEffect(() => {
+    fetchTodayJumpCount();
+
+    // 1분마다 업데이트
+    const jumpCountTimer = setInterval(fetchTodayJumpCount, 3000);
+    return () => clearInterval(jumpCountTimer);
+  }, []);
 
   const handleMouseLeave = () => {
     setIsClicked(false);
