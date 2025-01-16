@@ -6,13 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 
 import Image from "next/image";
-import {
-  LoaderCircle,
-  RotateCcw,
-  Thermometer,
-  ThermometerSnowflake,
-  Users,
-} from "lucide-react";
+import { Thermometer, Users } from "lucide-react";
 
 interface HangangData {
   success: boolean;
