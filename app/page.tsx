@@ -67,8 +67,8 @@ export default function Home() {
   };
 
   const formatDateTime = (date: string, time: string) => {
-    const month = date.substring(4, 6);
-    const day = date.substring(6, 8);
+    const month = date?.substring(4, 6);
+    const day = date?.substring(6, 8);
     return `${month}월 ${day}일 ${time}`;
   };
 
