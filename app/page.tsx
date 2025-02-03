@@ -26,7 +26,9 @@ export default function Home() {
   /**
    * 배경 타입: 이미지 or 라이브
    */
-  const [backgroundType, setBackgroundType] = useState<"image" | "live">("image");
+  const [backgroundType, setBackgroundType] = useState<"image" | "live">(
+    "image"
+  );
 
   const [currentTime, setCurrentTime] = useState(new Date());
   const [waterTemp, setWaterTemp] = useState<HangangData | null>(null);
@@ -42,7 +44,13 @@ export default function Home() {
   const fetchWaterTemp = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch("/api/hangang");
+      const response = await fetch("/api/hangang", {
+        cache: "no-store",
+        headers: {
+          "Cache-Control": "no-cache",
+          Pragma: "no-cache",
+        },
+      });
       const data = await response.json();
       setWaterTemp(data);
     } catch (error) {
@@ -236,14 +244,13 @@ export default function Home() {
             <iframe
               className="absolute inset-0 w-full h-full z-0"
               src="https://www.youtube.com/embed/-JhoMGoAfFc?autoplay=1&mute=1&controls=0&showinfo=0&modestbranding=1&rel=0&disablekb=1&iv_load_policy=3"
-              
               title="실시간 서울 한강 라이브캠"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
             />
-            // <iframe width="1021" height="562" src="https://www.youtube.com/embed/-JhoMGoAfFc" title="실시간 서울 한강 라이브캠 - 반포대교 4K Hangang Live Cam  24시간 로파이 노동요" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
           ) : (
+            // <iframe width="1021" height="562" src="https://www.youtube.com/embed/-JhoMGoAfFc" title="실시간 서울 한강 라이브캠 - 반포대교 4K Hangang Live Cam  24시간 로파이 노동요" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
             /**
              * 이미지 배경
              */
@@ -268,7 +275,10 @@ export default function Home() {
       >
         <div className="flex items-center space-x-2">
           {/* 배경 ON/OFF */}
-          <Switch checked={showBackground} onCheckedChange={handleToggleBackground} />
+          <Switch
+            checked={showBackground}
+            onCheckedChange={handleToggleBackground}
+          />
           <Label>Show Background</Label>
 
           {/* 배경이 ON일 때만 이미지/라이브 선택 토글 표시 */}
@@ -300,7 +310,10 @@ export default function Home() {
             <div className="flex items-center gap-2 font-bold text-foreground/80 ml-2">
               <Thermometer size={42} />
               <span>
-                {isLoading && waterTemp === null ? "--" : waterTemp?.temperature}°C
+                {isLoading && waterTemp === null
+                  ? "--"
+                  : waterTemp?.temperature}
+                °C
               </span>
             </div>
             <span>&nbsp;입니다</span>
