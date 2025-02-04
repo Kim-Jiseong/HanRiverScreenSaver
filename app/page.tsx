@@ -8,13 +8,29 @@ import { supabase } from "@/lib/supabase";
 
 import Image from "next/image";
 import { Thermometer, Users } from "lucide-react";
+import axios from "axios";
+
+interface HangangLocation {
+  TEMP: number;
+  LAST_UPDATE: string;
+  PH: number;
+}
 
 interface HangangData {
-  success: boolean;
-  temperature: number;
-  location: string;
-  date: string;
-  time: string;
+  STATUS: string;
+  MSG: string;
+  DATAs: {
+    CACHE_META: {
+      CREATED_AT: number;
+      UPDATED_AT: number;
+      DATA_KEY: string;
+    };
+    DATA: {
+      HANGANG: {
+        [key: string]: HangangLocation;
+      };
+    };
+  };
 }
 
 export default function Home() {
@@ -31,7 +47,10 @@ export default function Home() {
   );
 
   const [currentTime, setCurrentTime] = useState(new Date());
-  const [waterTemp, setWaterTemp] = useState<HangangData | null>(null);
+  const [waterTemp, setWaterTemp] = useState<{
+    location: string;
+    data: HangangLocation;
+  } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [jumpCount, setJumpCount] = useState(0);
   const [containerHeight, setContainerHeight] = useState(96);
@@ -44,15 +63,23 @@ export default function Home() {
   const fetchWaterTemp = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch("/api/hangang", {
-        cache: "no-store",
-        headers: {
-          "Cache-Control": "no-cache",
-          Pragma: "no-cache",
-        },
-      });
-      const data = await response.json();
-      setWaterTemp(data);
+      const response = await axios.get<HangangData>(
+        "https://api.hangang.life/"
+      );
+
+      // 가장 최근 데이터와 위치 선택
+      const locations = Object.entries(response.data.DATAs.DATA.HANGANG);
+      const [latestLocation, latestData] = locations.reduce(
+        ([prevLoc, prevData], [currLoc, currData]) => {
+          const prevTime = new Date(prevData.LAST_UPDATE).getTime();
+          const currTime = new Date(currData.LAST_UPDATE).getTime();
+          return currTime > prevTime
+            ? [currLoc, currData]
+            : [prevLoc, prevData];
+        }
+      );
+
+      setWaterTemp({ location: latestLocation, data: latestData });
     } catch (error) {
       console.error("한강 수온 데이터를 가져오는데 실패했습니다:", error);
     } finally {
@@ -121,9 +148,11 @@ export default function Home() {
   /**
    * 수온 정보 날짜/시간 포맷
    */
-  const formatDateTime = (date: string, time: string) => {
-    const month = date?.substring(4, 6);
-    const day = date?.substring(6, 8);
+  const formatDateTime = (dateTime: string) => {
+    const date = new Date(dateTime);
+    const month = (date.getMonth() + 1).toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
+    const time = date.toTimeString().slice(0, 5);
     return `${month}월 ${day}일 ${time}`;
   };
 
@@ -301,7 +330,9 @@ export default function Home() {
           <div className="flex mb-2 items-center gap-1">
             <span className="text-sm text-foreground/50 font-medium">
               {waterTemp
-                ? `${formatDateTime(waterTemp.date, waterTemp.time)} 기준`
+                ? `${formatDateTime(waterTemp.data.LAST_UPDATE)} ${
+                    waterTemp.location
+                  } 기준`
                 : "Loading..."}{" "}
             </span>
           </div>
@@ -310,9 +341,7 @@ export default function Home() {
             <div className="flex items-center gap-2 font-bold text-foreground/80 ml-2">
               <Thermometer size={42} />
               <span>
-                {isLoading && waterTemp === null
-                  ? "--"
-                  : waterTemp?.temperature}
+                {isLoading && waterTemp === null ? "--" : waterTemp?.data.TEMP}
                 °C
               </span>
             </div>
