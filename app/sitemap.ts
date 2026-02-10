@@ -1,17 +1,18 @@
 import { MetadataRoute } from "next";
 
 /**
- * sitemap.xml 생성을 위한 함수
- * - 공식 문서: https://nextjs.org/docs/app/api-reference/functions/generate-metadata#sitemap
+ * sitemap.xml 생성
+ * - changeFrequency: "hourly" (수온 데이터가 자주 갱신되므로)
+ * - priority: 1 (메인 페이지 최우선)
  */
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://hangang.live";
 
   return [
     {
-      url: `${baseUrl}`,
+      url: baseUrl,
       lastModified: new Date(),
-      changeFrequency: "daily",
+      changeFrequency: "hourly",
       priority: 1,
     },
   ];

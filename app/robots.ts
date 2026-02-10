@@ -1,19 +1,29 @@
 import { MetadataRoute } from "next";
 
 /**
- * robots.txt 생성을 위한 함수
- * - 공식 문서: https://nextjs.org/docs/app/api-reference/functions/generate-metadata#robots
+ * robots.txt 생성
+ * - 모든 크롤러 허용 (Googlebot, Yeti/Naver 등)
+ * - /api 경로만 차단
+ * - sitemap 및 host 명시
  */
 export default function robots(): MetadataRoute.Robots {
   return {
-    // 크롤러 규칙
     rules: [
       {
         userAgent: "*",
-        allow: "/",      
-        disallow: "/api" 
+        allow: "/",
+        disallow: "/api",
+      },
+      {
+        userAgent: "Googlebot",
+        allow: "/",
+      },
+      {
+        userAgent: "Yeti",
+        allow: "/",
       },
     ],
     sitemap: "https://hangang.live/sitemap.xml",
+    host: "https://hangang.live",
   };
 }
