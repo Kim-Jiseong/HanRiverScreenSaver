@@ -117,7 +117,9 @@ export const metadata: Metadata = {
     // Google Search Console 등록 후 인증 코드 추가
     // google: "your-google-verification-code",
     // Naver 웹마스터 도구 등록 후 인증 코드 추가
-    // other: { "naver-site-verification": "your-naver-verification-code" },
+    other: {
+      "naver-site-verification": "e01777ef9217587981fd60f2aa48fcde124646eb",
+    },
   },
 };
 
