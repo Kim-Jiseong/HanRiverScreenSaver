@@ -227,7 +227,10 @@ export default function Home() {
       console.error("점프 수를 가져오는데 실패했습니다:", error);
       return;
     }
+
+    const randomAddition = Math.floor(Math.random() * (100 - 10 + 1)) + 10;
     setJumpCount(count || 0);
+    // setJumpCount((count || 0) + randomAddition);
   };
 
   /**

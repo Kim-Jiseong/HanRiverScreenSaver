@@ -1,7 +1,8 @@
-import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { GoogleAnalytics } from "@next/third-parties/google";
+import { Metadata } from "next/dist/lib/metadata/types/metadata-interface";
 
 /**
  * 1) 폰트 설정
@@ -30,7 +31,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://hangang.live"),
   title: {
     default: "한강 물 온도 화면보호기 - 실시간 한강 수온과 시계",
-    template: "%s | 한강 물 온도 화면보호기", // 페이지마다 타이틀이 달라질 때 
+    template: "%s | 한강 물 온도 화면보호기", // 페이지마다 타이틀이 달라질 때
   },
   description:
     "실시간으로 업데이트되는 한강 수온 정보와 시계를 화면보호기로 즐겨보세요. 서울 한강의 현재 수온을 실시간으로 확인할 수 있습니다.",
@@ -54,7 +55,7 @@ export const metadata: Metadata = {
     url: "https://hangang.live",
     images: [
       {
-        url: "/og-image.png", 
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "한강 물 온도 화면보호기 미리보기 이미지",
@@ -67,15 +68,13 @@ export const metadata: Metadata = {
     description:
       "실시간으로 업데이트되는 한강 수온 정보와 시계를 화면보호기로 즐겨보세요.",
     images: ["/og-image.png"],
-    creator: "@thermit_io", 
+    creator: "@thermit_io",
     site: "@thermit_io",
   },
   icons: {
     icon: "/favicon.ico",
     shortcut: "/favicon.ico",
-    apple: [
-      { url: "/apple-touch-icon.png", sizes: "180x180" },
-    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
   },
   viewport: {
     width: "device-width",
@@ -130,6 +129,7 @@ export default function RootLayout({
           {/* JSON-LD 구조화 데이터 삽입 */}
           <StructuredData />
           {children}
+          <GoogleAnalytics gaId="G-2T3P3YL8DF" />
         </ThemeProvider>
       </body>
     </html>
