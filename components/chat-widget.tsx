@@ -3,7 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import { submitChatMessage } from "@/app/actions/chat";
-import { Send, ChevronUp, ChevronDown } from "lucide-react";
+import { Send, ChevronUp, ChevronDown, Loader2 } from "lucide-react";
 
 interface ChatMessage {
   id: string;
@@ -24,6 +24,8 @@ export function ChatWidget({ isVisible, className = "" }: ChatWidgetProps) {
   const [errorMsg, setErrorMsg] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const isUserScrolledUp = useRef(false);
 
   // 1. 기존 메시지 로드 및 구독 설정
   useEffect(() => {
@@ -73,15 +75,35 @@ export function ChatWidget({ isVisible, className = "" }: ChatWidgetProps) {
     };
   }, [isVisible]);
 
-  // 2. 메시지 자동 스크롤
+  // 2. 유저 스크롤 감지
+  const handleScroll = () => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    // 하단에서 30px 이내면 "바닥에 있다"로 판정
+    const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < 30;
+    isUserScrolledUp.current = !atBottom;
+  };
+
+  // 3. 메시지 자동 스크롤 (유저가 스크롤 올린 경우 제외)
   useEffect(() => {
-    if (messagesEndRef.current) {
+    if (!isUserScrolledUp.current && messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({
         behavior: "smooth",
         block: "nearest",
       });
     }
-  }, [messages, isExpanded]);
+  }, [messages]);
+
+  // 4. 확장/축소 시 항상 하단으로 스크롤
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({
+        behavior: "instant",
+        block: "nearest",
+      });
+    }
+    isUserScrolledUp.current = false;
+  }, [isExpanded]);
 
   // 3. 메시지 전송
   const handleSubmit = async (e: React.FormEvent) => {
@@ -103,6 +125,7 @@ export function ChatWidget({ isVisible, className = "" }: ChatWidgetProps) {
 
     setIsSubmitting(true);
     setErrorMsg("");
+    isUserScrolledUp.current = false;
 
     const { error, success } = await submitChatMessage(newMessage);
 
@@ -173,6 +196,8 @@ export function ChatWidget({ isVisible, className = "" }: ChatWidgetProps) {
           마스크 이미지를 통해 리스트 위쪽으로 갈수록 투명해지는 그라데이션 페이드 효과 적용 
         */}
         <div
+          ref={scrollContainerRef}
+          onScroll={handleScroll}
           className={`w-full flex-1 overflow-y-auto mb-2 pr-1 transition-colors ${
             isExpanded ? "scrollbar-thin" : "scrollbar-hide"
           }`}
@@ -237,7 +262,11 @@ export function ChatWidget({ isVisible, className = "" }: ChatWidgetProps) {
             disabled={isSubmitting || !newMessage.trim()}
             className="text-foreground/30 hover:text-foreground/70 disabled:opacity-30 transition-colors p-1 flex-shrink-0"
           >
-            <Send size={14} />
+            {isSubmitting ? (
+              <Loader2 size={14} className="animate-spin" />
+            ) : (
+              <Send size={14} />
+            )}
           </button>
         </form>
       </div>
