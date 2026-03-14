@@ -4,6 +4,7 @@ export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
 import { ThemeProvider } from "@/components/theme-provider";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import Script from "next/script";
 import type { Metadata, Viewport } from "next";
 
 /**
@@ -135,6 +136,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8710277766749613"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           {children}
           <GoogleAnalytics gaId="G-2T3P3YL8DF" />
