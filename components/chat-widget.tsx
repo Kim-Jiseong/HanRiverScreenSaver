@@ -94,15 +94,21 @@ export function ChatWidget({ isVisible, className = "" }: ChatWidgetProps) {
     }
   }, [messages]);
 
-  // 4. 확장/축소 시 항상 하단으로 스크롤
+  // 4. 확장/축소 시 항상 하단으로 스크롤 (CSS transition 완료 후에도 재실행)
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({
-        behavior: "instant",
-        block: "nearest",
-      });
-    }
+    const scrollToBottom = () => {
+      if (messagesEndRef.current) {
+        messagesEndRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+        });
+      }
+    };
+    scrollToBottom();
     isUserScrolledUp.current = false;
+    // duration-500(500ms) 전환 완료 후 다시 스크롤
+    const timeout = setTimeout(scrollToBottom, 500);
+    return () => clearTimeout(timeout);
   }, [isExpanded]);
 
   // 3. 메시지 전송
