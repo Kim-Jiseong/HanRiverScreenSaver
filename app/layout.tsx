@@ -1,5 +1,7 @@
 import localFont from "next/font/local";
 import "./globals.css";
+export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 import { ThemeProvider } from "@/components/theme-provider";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata, Viewport } from "next";
@@ -164,7 +166,7 @@ function StructuredData() {
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-      mainEntity: [
+    mainEntity: [
       {
         "@type": "Question",
         name: "한강물 온도는 어떻게 측정하나요?",
@@ -183,7 +185,7 @@ function StructuredData() {
       },
       {
         "@type": "Question",
-        name: "한강 물놀이 적정 수온은 몇 도인가요?",
+        name: "한강 입수 적정 수온은 몇 도인가요?",
         acceptedAnswer: {
           "@type": "Answer",
           text: "적정 수온은 약 22°C~28°C입니다. 20°C 이하에서는 체온 저하 위험이 있습니다.",
@@ -191,18 +193,10 @@ function StructuredData() {
       },
       {
         "@type": "Question",
-        name: "겨울철 한강 수온은 보통 몇 도인가요?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "일반적으로 1°C~5°C 사이이며, 매우 추운 날씨에는 0°C에 가까워집니다.",
-        },
-      },
-      {
-        "@type": "Question",
         name: "hangang.live는 어떤 사이트인가요?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "실시간 한강물 온도를 아름다운 시계 화면보호기와 함께 제공하는 서비스입니다.",
+          text: "실시간 한강물 온도를 아름다운 시계 화면보호기, 라이브 캠 영상과 함께 제공하는 서비스입니다.",
         },
       },
     ],
