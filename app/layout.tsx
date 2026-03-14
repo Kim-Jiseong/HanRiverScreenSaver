@@ -125,96 +125,6 @@ export const metadata: Metadata = {
   },
 };
 
-/**
- * 4) JSON-LD 구조화 데이터 - 3가지 스키마
- * - WebSite: 사이트 기본 정보 + 대체 이름(검색어 변형)
- * - WebApplication: 웹 앱으로서의 정보 (무료, 유틸리티)
- * - FAQPage: 자주 묻는 질문 (구글 리치 스니펫 생성)
- */
-function StructuredData() {
-  const graphSchema = {
-    "@context": "https://schema.org",
-    "@graph": [
-      {
-        "@type": "WebSite",
-        name: "한강물 온도",
-        alternateName: [
-          "한강 수온",
-          "한강물온도",
-          "한강 물 온도",
-          "hangang.live",
-        ],
-        url: "https://hangang.live",
-        description:
-          "한강물 온도를 실시간으로 확인할 수 있는 웹사이트입니다. 서울 한강 수온 측정 데이터를 기반으로 실시간 수온 정보를 제공합니다.",
-        inLanguage: "ko",
-      },
-      {
-        "@type": "WebApplication",
-        name: "한강물 온도 - 실시간 한강 수온 확인",
-        url: "https://hangang.live",
-        description:
-          "실시간 한강 수온 정보와 시계를 제공하는 화면보호기 웹 애플리케이션",
-        applicationCategory: "UtilitiesApplication",
-        operatingSystem: "All",
-        offers: {
-          "@type": "Offer",
-          price: "0",
-          priceCurrency: "KRW",
-        },
-        author: {
-          "@type": "Person",
-          name: "Thermit",
-        },
-      },
-      {
-        "@type": "FAQPage",
-        mainEntity: [
-          {
-            "@type": "Question",
-            name: "한강물 온도는 어떻게 측정하나요?",
-            acceptedAnswer: {
-              "@type": "Answer",
-              text: "서울시 수질 자동측정망을 통해 실시간으로 측정되며, 주요 지점(노량진, 선유 등)의 데이터를 제공합니다.",
-            },
-          },
-          {
-            "@type": "Question",
-            name: "한강물 온도 데이터는 얼마나 자주 업데이트되나요?",
-            acceptedAnswer: {
-              "@type": "Answer",
-              text: "약 5분 간격으로 갱신되며, 화면에는 가장 최근 측정 시간이 함께 표시됩니다.",
-            },
-          },
-          {
-            "@type": "Question",
-            name: "한강 입수 적정 수온은 몇 도인가요?",
-            acceptedAnswer: {
-              "@type": "Answer",
-              text: "적정 수온은 약 22°C~28°C입니다. 20°C 이하에서는 체온 저하 위험이 있습니다.",
-            },
-          },
-          {
-            "@type": "Question",
-            name: "hangang.live는 어떤 사이트인가요?",
-            acceptedAnswer: {
-              "@type": "Answer",
-              text: "실시간 한강물 온도를 아름다운 시계 화면보호기, 라이브 캠 영상과 함께 제공하는 서비스입니다.",
-            },
-          },
-        ],
-      },
-    ],
-  };
-
-  return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(graphSchema) }}
-    />
-  );
-}
-
 export default function RootLayout({
   children,
 }: {
@@ -229,7 +139,6 @@ export default function RootLayout({
           {children}
           <GoogleAnalytics gaId="G-2T3P3YL8DF" />
         </ThemeProvider>
-        <StructuredData />
       </body>
     </html>
   );
