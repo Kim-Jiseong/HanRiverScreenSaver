@@ -227,9 +227,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko" suppressHydrationWarning>
-      <head>
-        <StructuredData />
-      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
@@ -237,6 +234,7 @@ export default function RootLayout({
           {children}
           <GoogleAnalytics gaId="G-2T3P3YL8DF" />
         </ThemeProvider>
+        <StructuredData />
       </body>
     </html>
   );
