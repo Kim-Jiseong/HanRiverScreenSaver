@@ -69,7 +69,15 @@ export default function Home() {
 
       // 가장 최근 데이터와 위치 선택
       const locations = Object.entries(response.data.DATAs.DATA.HANGANG);
-      const [latestLocation, latestData] = locations.reduce(
+      
+      // TEMP 값이 존재하는 (null이 아닌) 데이터만 필터링
+      const validLocations = locations.filter(([_, data]) => data.TEMP !== null);
+
+      if (validLocations.length === 0) {
+        throw new Error("유효한 수온 데이터가 없습니다.");
+      }
+
+      const [latestLocation, latestData] = validLocations.reduce(
         ([prevLoc, prevData], [currLoc, currData]) => {
           const prevTime = new Date(prevData.LAST_UPDATE).getTime();
           const currTime = new Date(currData.LAST_UPDATE).getTime();
@@ -355,7 +363,7 @@ export default function Home() {
             <span>&nbsp;입니다</span>
           </div>
 
-          <div className="font-mono text-[5rem] sm:text-[7rem] md:text-[9rem] lg:text-[11rem] w-full flex justify-center items-center">
+          <div className="font-mono text-[4.5rem] sm:text-[7rem] md:text-[9rem] lg:text-[11rem] w-full px-4 sm:px-0 flex justify-center items-center break-keep text-center">
             {currentTime.toLocaleTimeString("ko-KR", {
               hour: "2-digit",
               minute: "2-digit",
@@ -491,10 +499,7 @@ export default function Home() {
                 한강물 온도는 어떻게 측정하나요?
               </summary>
               <p className="mt-3 text-foreground/50 text-sm leading-relaxed pl-4">
-                한강 수온은 서울시에서 운영하는 수질 자동측정망을 통해
-                실시간으로 측정됩니다. 노량진, 선유, 탄천, 중랑천, 안양천 등
-                주요 지점에 설치된 자동측정 장비가 수온을 포함한
-                수질 데이터를 수집합니다.
+                서울시 수질 자동측정망을 통해 실시간으로 측정되며, 주요 지점(노량진, 선유 등)의 데이터를 제공합니다.
               </p>
             </details>
             <details className="group border-b border-foreground/10 pb-4">
@@ -502,9 +507,7 @@ export default function Home() {
                 한강 물놀이 적정 수온은 몇 도인가요?
               </summary>
               <p className="mt-3 text-foreground/50 text-sm leading-relaxed pl-4">
-                일반적으로 수영이나 물놀이에 적합한 수온은 약 22°C~28°C입니다.
-                20°C 이하에서는 체온 저하의 위험이 있으므로 주의가 필요합니다.
-                한강 수영장은 보통 6월 말~8월 중순에 운영됩니다.
+                적정 수온은 약 22°C~28°C입니다. 20°C 이하에서는 체온 저하 위험이 있습니다.
               </p>
             </details>
             <details className="group border-b border-foreground/10 pb-4">
@@ -512,9 +515,7 @@ export default function Home() {
                 겨울철 한강 수온은 보통 몇 도인가요?
               </summary>
               <p className="mt-3 text-foreground/50 text-sm leading-relaxed pl-4">
-                겨울철 한강 수온은 보통 1°C~5°C 사이이며,
-                가장 추운 1~2월에는 0°C에 가까워질 수 있습니다.
-                여름철에는 20°C~27°C까지 상승합니다.
+                일반적으로 1°C~5°C 사이이며, 매우 추운 날씨에는 0°C에 가까워집니다.
               </p>
             </details>
             <details className="group border-b border-foreground/10 pb-4">
@@ -522,8 +523,7 @@ export default function Home() {
                 한강물 온도 데이터는 얼마나 자주 업데이트되나요?
               </summary>
               <p className="mt-3 text-foreground/50 text-sm leading-relaxed pl-4">
-                hangang.live는 약 5분 간격으로 최신 한강 수온 데이터를
-                갱신합니다. 화면에 표시되는 시간은 가장 최근 측정 시간 기준입니다.
+                약 5분 간격으로 갱신되며, 화면에는 가장 최근 측정 시간이 함께 표시됩니다.
               </p>
             </details>
           </div>

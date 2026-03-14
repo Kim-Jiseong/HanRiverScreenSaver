@@ -164,21 +164,21 @@ function StructuredData() {
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: [
+      mainEntity: [
       {
         "@type": "Question",
         name: "한강물 온도는 어떻게 측정하나요?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "한강 수온은 서울시에서 운영하는 수질 자동측정망을 통해 실시간으로 측정됩니다. 노량진, 선유, 탄천, 중랑천, 안양천 등 주요 지점에 설치된 자동측정 장비가 수온을 포함한 수질 데이터를 수집합니다.",
+          text: "서울시 수질 자동측정망을 통해 실시간으로 측정되며, 주요 지점(노량진, 선유 등)의 데이터를 제공합니다.",
         },
       },
       {
         "@type": "Question",
-        name: "한강물 온도는 실시간으로 업데이트 되나요?",
+        name: "한강물 온도 데이터는 얼마나 자주 업데이트되나요?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "네, hangang.live는 한강 수온 데이터를 실시간으로 업데이트합니다. 약 5분 간격으로 서울시 수질 측정망의 최신 수온 데이터를 가져와 표시합니다.",
+          text: "약 5분 간격으로 갱신되며, 화면에는 가장 최근 측정 시간이 함께 표시됩니다.",
         },
       },
       {
@@ -186,7 +186,7 @@ function StructuredData() {
         name: "한강 물놀이 적정 수온은 몇 도인가요?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "일반적으로 수영이나 물놀이에 적합한 수온은 약 22°C~28°C입니다. 20°C 이하의 수온에서는 체온 저하의 위험이 있으므로 주의가 필요합니다. 한강 수영장은 보통 6월 말~8월 중순에 운영됩니다.",
+          text: "적정 수온은 약 22°C~28°C입니다. 20°C 이하에서는 체온 저하 위험이 있습니다.",
         },
       },
       {
@@ -194,7 +194,7 @@ function StructuredData() {
         name: "겨울철 한강 수온은 보통 몇 도인가요?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "겨울철 한강 수온은 보통 1°C~5°C 사이이며, 가장 추운 1~2월에는 0°C에 가까워질 수 있습니다. 여름철에는 20°C~27°C까지 상승합니다. 봄과 가을에는 10°C~18°C 사이를 유지합니다.",
+          text: "일반적으로 1°C~5°C 사이이며, 매우 추운 날씨에는 0°C에 가까워집니다.",
         },
       },
       {
@@ -202,7 +202,7 @@ function StructuredData() {
         name: "hangang.live는 어떤 사이트인가요?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "hangang.live는 실시간 한강물 온도를 아름다운 시계 화면보호기와 함께 보여주는 웹사이트입니다. 한강 수온 확인은 물론, 시간대별 배경 이미지와 실시간 한강 라이브캠을 통해 화면보호기로도 활용할 수 있습니다.",
+          text: "실시간 한강물 온도를 아름다운 시계 화면보호기와 함께 제공하는 서비스입니다.",
         },
       },
     ],
